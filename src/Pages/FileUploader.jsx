@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+
 function FileUploader() {
   const [file, setFile] = useState(null);
+  const [text,setText] = useState('');
   const [link,setLink] = useState('');
   const handleDrop = (event) => {
     event.preventDefault();
@@ -22,6 +24,8 @@ function FileUploader() {
     event.preventDefault();
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('text',text);
+    console.log(text);
     
     try {
         const response = await axios.post('https://fileshare-link.onrender.com/upload', formData, {
@@ -30,7 +34,7 @@ function FileUploader() {
           }
         });
         console.log(response.data.path);
-        setLink(response.data.path);
+        await setLink(response.data.path);
       } catch (err) {
         console.error(err);
       }
@@ -38,16 +42,9 @@ function FileUploader() {
 
   return (
     <>
-    {/* <form onSubmit={handleSubmit}>
-      <input type="file" onChange={(e)=>{
-        setFile(e.target.files[0]);
-      }}/>
-      <button type="submit">Upload</button>
-    </form>
-    <a href={link}>{link}</a> */}
     <div className='m-10'>
       <h1 className='w-full text-center font-bold text-3xl mb-5 text-slate-600'>File Share Link!!</h1>
-    <form onSubmit={handleSubmit} >
+    <form onSubmit={handleSubmit} className='flex flex-col justify-center items-center'>
       <div
         className="border-2 border-dashed border-gray-400 p-4 rounded-md flex flex-col items-center justify-center w-full h-64"
         onDrop={handleDrop}
@@ -64,9 +61,15 @@ function FileUploader() {
           {file ? file.name : "Drag and drop a file or click to choose a file"}
         </label>
       </div>
+      <div>
+      <label>Password: </label>
+      <input type='password' className='my-10 border-2 border-black rounded-sm text-lg' onChange={(e)=>{
+                  setText(e.target.value);
+      }}/> 
+      </div>
       <button
         type="submit"
-        className="mt-4 px-4 py-2 text-sm font-medium text-white bg-green-500 rounded-md cursor-pointer hover:bg-green-600 focus:bg-green-600"
+        className="mt-4 px-8 py-3 text-sm font-medium text-white bg-green-500 rounded-md cursor-pointer hover:bg-green-600 focus:bg-green-600"
         disabled={!file}
       >
         Uplaod
