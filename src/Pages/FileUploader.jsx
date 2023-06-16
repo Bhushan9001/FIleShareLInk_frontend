@@ -34,7 +34,7 @@ function FileUploader() {
           }
         });
         console.log(response.data.path);
-        await setLink(response.data.path);
+        setLink(response.data.path);
       } catch (err) {
         console.error(err);
       }
